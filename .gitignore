@@ -1,0 +1,37 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# build
+dist/
+dist-ssr/
+*.local
+.vercel/
+
+# env — never commit real keys
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# supabase local stack
+supabase/.branches/
+supabase/.temp/
+.branches/
+.temp/
+
+# generated from the database schema (npm run db:types)
+src/lib/database.types.ts
+
+# editors / os
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
