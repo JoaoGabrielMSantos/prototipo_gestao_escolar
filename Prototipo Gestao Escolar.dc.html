@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  body { margin: 0; background: #f4f3f0; font-family: "Instrument Sans", system-ui, sans-serif; color: #17170f; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: oklch(0.52 0.13 258); text-decoration: none; }
+  a:hover { color: oklch(0.42 0.13 258); text-decoration: underline; }
+  input, select, button { font: inherit; color: inherit; }
+</style>
+</helmet>
+
+<sc-if value="{{ isLoggedOut }}" hint-placeholder-val="{{ true }}">
+  <div style="min-height: 100vh; display: grid; place-items: center; padding: 32px 20px;">
+    <div style="width: 100%; max-width: 880px; display: grid; grid-template-columns: 1fr; gap: 28px;">
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 22px; height: 22px; border-radius: 6px; background: oklch(0.52 0.13 258);"></div>
+          <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em;">Plataforma Escolar</span>
+        </div>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: #7a7a6d;">multi-tenant · uma instância, muitas escolas</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr); gap: 20px; align-items: start;">
+
+        <div style="background: #fff; border: 1px solid #e3e1d8; border-radius: 14px; padding: 26px; display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 19px; font-weight: 600; letter-spacing: -0.02em;">Entrar</span>
+            <span style="font-size: 13px; color: #6f6f62;">Sua escola e seu papel vêm do perfil vinculado à conta.</span>
+          </div>
+
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 12px; font-weight: 500; color: #55554a;">E-mail</span>
+            <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="voce@escola.test" style="height: 40px; padding: 0 12px; border: 1px solid #dddbd1; border-radius: 9px; background: #fbfbf9; outline: none; font-size: 14px;" />
+          </label>
+
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 12px; font-weight: 500; color: #55554a;">Senha</span>
+            <input type="password" value="{{ password }}" onChange="{{ onPassword }}" placeholder="••••••••" style="height: 40px; padding: 0 12px; border: 1px solid #dddbd1; border-radius: 9px; background: #fbfbf9; outline: none; font-size: 14px;" />
+          </label>
+
+          <sc-if value="{{ loginError }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: oklch(0.52 0.16 25);">{{ loginError }}</span>
+          </sc-if>
+
+          <button onClick="{{ submitLogin }}" style="height: 42px; border: none; border-radius: 9px; background: oklch(0.52 0.13 258); color: #fff; font-size: 14px; font-weight: 500; cursor: pointer;" style-hover="background: oklch(0.44 0.13 258);">Entrar</button>
+        </div>
+
+        <div style="background: #fff; border: 1px solid #e3e1d8; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 13px; font-weight: 600;">Contas do seed</span>
+            <span style="font-size: 12px; color: #6f6f62;">Duas escolas, um usuário por papel. Entre com duas contas de escolas diferentes para ver o isolamento.</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <sc-for list="{{ accounts }}" as="acc" hint-placeholder-count="5">
+              <button onClick="{{ acc.login }}" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid #e6e4db; border-radius: 9px; background: #fbfbf9; cursor: pointer; text-align: left;" style-hover="border-color: oklch(0.52 0.13 258); background: #fff;">
+                <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ acc.email }}</span>
+                  <span style="font-size: 11px; color: #7a7a6d;">{{ acc.context }}</span>
+                </span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: #55554a; background: #efeee8; border-radius: 20px; padding: 4px 9px; white-space: nowrap;">{{ acc.role }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8d8d80;">senha: senha123</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isLoggedIn }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height: 100vh; display: flex; align-items: stretch;">
+
+    <sc-if value="{{ sidebarOpen }}" hint-placeholder-val="{{ true }}">
+      <aside style="width: 248px; flex: 0 0 248px; background: #fff; border-right: 1px solid #e3e1d8; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 14px; gap: 20px; position: sticky; top: 0; height: 100vh;">
+        <div style="display: flex; flex-direction: column; gap: 22px; min-width: 0;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 4px;">
+            <div style="display: flex; align-items: center; gap: 9px; min-width: 0;">
+              <div style="width: 20px; height: 20px; border-radius: 6px; background: oklch(0.52 0.13 258); flex: 0 0 20px;"></div>
+              <span style="font-size: 14px; font-weight: 600; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ tenantName }}</span>
+            </div>
+            <button onClick="{{ toggleSidebar }}" title="Recolher menu" style="width: 26px; height: 26px; flex: 0 0 26px; border: 1px solid #e6e4db; border-radius: 7px; background: #fbfbf9; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6f6f62; line-height: 1;">‹</button>
+          </div>
+
+          <nav style="display: flex; flex-direction: column; gap: 3px;">
+            <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="5">
+              <sc-if value="{{ item.isActive }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ item.go }}" style="display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: none; border-radius: 8px; background: #edf0fb; color: oklch(0.42 0.13 258); font-size: 13px; font-weight: 500; cursor: pointer; text-align: left; width: 100%;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; width: 18px; opacity: 0.75;">{{ item.tag }}</span>
+                  <span>{{ item.label }}</span>
+                </button>
+              </sc-if>
+              <sc-if value="{{ item.isInactive }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ item.go }}" style="display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: none; border-radius: 8px; background: transparent; color: #4a4a40; font-size: 13px; font-weight: 400; cursor: pointer; text-align: left; width: 100%;" style-hover="background: #f4f3ef;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; width: 18px; color: #a2a294;">{{ item.tag }}</span>
+                  <span>{{ item.label }}</span>
+                </button>
+              </sc-if>
+            </sc-for>
+          </nav>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #eeece5; padding: 14px 6px 0;">
+          <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+            <span style="font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ userName }}</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8d8d80; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ roleLabel }}</span>
+          </div>
+          <button onClick="{{ logout }}" style="align-self: flex-start; padding: 6px 10px; border: 1px solid #e6e4db; border-radius: 7px; background: #fbfbf9; font-size: 12px; cursor: pointer; color: #55554a;" style-hover="border-color: #cfcdc2;">Trocar de conta</button>
+        </div>
+      </aside>
+    </sc-if>
+
+    <sc-if value="{{ sidebarClosed }}" hint-placeholder-val="{{ false }}">
+      <aside style="width: 58px; flex: 0 0 58px; background: #fff; border-right: 1px solid #e3e1d8; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px 8px; gap: 20px; position: sticky; top: 0; height: 100vh;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+          <button onClick="{{ toggleSidebar }}" title="Expandir menu" style="width: 30px; height: 30px; border: none; border-radius: 8px; background: oklch(0.52 0.13 258); cursor: pointer;"></button>
+          <nav style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
+            <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="5">
+              <button onClick="{{ item.go }}" title="{{ item.label }}" style="width: 34px; height: 32px; border: 1px solid #eeece5; border-radius: 8px; background: #fbfbf9; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #55554a;" style-hover="border-color: oklch(0.52 0.13 258);">{{ item.tag }}</button>
+            </sc-for>
+          </nav>
+        </div>
+        <button onClick="{{ logout }}" title="Trocar de conta" style="width: 34px; height: 32px; border: 1px solid #eeece5; border-radius: 8px; background: #fbfbf9; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #55554a;">↩</button>
+      </aside>
+    </sc-if>
+
+    <main style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column;">
+      <header style="border-bottom: 1px solid #e3e1d8; background: #faf9f6; padding: 22px 28px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: #8d8d80;">{{ scopeLine }}</span>
+          <h1 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.02em;">{{ screenTitle }}</h1>
+          <span style="font-size: 13px; color: #6f6f62; max-width: 62ch; text-wrap: pretty;">{{ screenSubtitle }}</span>
+        </div>
+      </header>
+
+      <div style="padding: 26px 28px 60px; display: flex; flex-direction: column; gap: 22px;">
+
+        <sc-if value="{{ showDashboard }}" hint-placeholder-val="{{ true }}">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px;">
+            <sc-for list="{{ stats }}" as="stat" hint-placeholder-count="3">
+              <div style="background: #fff; border: 1px solid #e3e1d8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: #8d8d80;">{{ stat.label }}</span>
+                <span style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em;">{{ stat.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background: #fff; border: 1px dashed #d6d4c8; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 14px; font-weight: 600;">Área reservada</span>
+            <span style="font-size: 13px; color: #6f6f62; max-width: 70ch; text-wrap: pretty;">O conteúdo desta tela depende das regras pedagógicas em validação com a escola parceira (período letivo, composição de nota, recuperação). Nesta fase ela existe só para provar que a rota certa carrega para o papel certo.</span>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showCollection }}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 20px; align-items: start;">
+
+            <div style="background: #fff; border: 1px solid #e3e1d8; border-radius: 12px; overflow: hidden;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #eeece5;">
+                <span style="font-size: 13px; font-weight: 600;">{{ collectionTitle }}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8d8d80;">{{ rowCountLabel }}</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr; overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                  <thead>
+                    <tr>
+                      <sc-for list="{{ columns }}" as="col" hint-placeholder-count="3">
+                        <th style="text-align: left; padding: 10px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; color: #8d8d80; font-weight: 400; border-bottom: 1px solid #eeece5; white-space: nowrap;">{{ col }}</th>
+                      </sc-for>
+                      <th style="border-bottom: 1px solid #eeece5;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <sc-for list="{{ rows }}" as="row" hint-placeholder-count="3">
+                      <tr>
+                        <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="3">
+                          <td style="padding: 12px 16px; border-bottom: 1px solid #f3f1ea; white-space: nowrap;">{{ cell.text }}</td>
+                        </sc-for>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid #f3f1ea; text-align: right;">
+                          <button onClick="{{ row.remove }}" style="padding: 4px 9px; border: 1px solid #e6e4db; border-radius: 6px; background: #fbfbf9; font-size: 11px; color: #6f6f62; cursor: pointer;" style-hover="border-color: oklch(0.55 0.16 25); color: oklch(0.5 0.16 25);">Excluir</button>
+                        </td>
+                      </tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </div>
+              <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="padding: 26px 16px; display: flex; flex-direction: column; gap: 4px; align-items: center;">
+                  <span style="font-size: 13px; color: #6f6f62;">Nenhum registro nesta escola.</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #a2a294;">select * from {{ collectionTable }}</span>
+                </div>
+              </sc-if>
+            </div>
+
+            <form onSubmit="{{ submitForm }}" style="background: #fff; border: 1px solid #e3e1d8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; flex-direction: column; gap: 3px;">
+                <span style="font-size: 13px; font-weight: 600;">{{ formTitle }}</span>
+                <span style="font-size: 12px; color: #6f6f62;">school_id preenchido pela sessão — o banco recusa qualquer outro.</span>
+              </div>
+
+              <sc-for list="{{ fields }}" as="field" hint-placeholder-count="3">
+                <label style="display: flex; flex-direction: column; gap: 6px;">
+                  <span style="font-size: 12px; font-weight: 500; color: #55554a;">{{ field.label }}</span>
+                  <sc-if value="{{ field.isSelect }}" hint-placeholder-val="{{ false }}">
+                    <select value="{{ field.value }}" onChange="{{ field.onChange }}" style="height: 38px; padding: 0 10px; border: 1px solid #dddbd1; border-radius: 8px; background: #fbfbf9; font-size: 13px; outline: none;">
+                      <sc-for list="{{ field.options }}" as="opt" hint-placeholder-count="2">
+                        <option value="{{ opt }}">{{ opt }}</option>
+                      </sc-for>
+                    </select>
+                  </sc-if>
+                  <sc-if value="{{ field.isText }}" hint-placeholder-val="{{ true }}">
+                    <input value="{{ field.value }}" onChange="{{ field.onChange }}" placeholder="{{ field.placeholder }}" style="height: 38px; padding: 0 10px; border: 1px solid #dddbd1; border-radius: 8px; background: #fbfbf9; font-size: 13px; outline: none;" />
+                  </sc-if>
+                </label>
+              </sc-for>
+
+              <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: oklch(0.52 0.16 25);">{{ formError }}</span>
+              </sc-if>
+
+              <button type="submit" style="height: 38px; border: none; border-radius: 8px; background: oklch(0.52 0.13 258); color: #fff; font-size: 13px; font-weight: 500; cursor: pointer;" style-hover="background: oklch(0.44 0.13 258);">Salvar</button>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #a2a294; text-wrap: pretty;">{{ insertHint }}</span>
+            </form>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showIsolation }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: 18px;">
+
+            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: #fff; border: 1px solid #e3e1d8; border-radius: 12px; padding: 16px 18px;">
+              <button onClick="{{ runSuite }}" style="height: 38px; padding: 0 16px; border: none; border-radius: 8px; background: oklch(0.52 0.13 258); color: #fff; font-size: 13px; font-weight: 500; cursor: pointer;" style-hover="background: oklch(0.44 0.13 258);">Executar bateria</button>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #55554a;">{{ suiteStatus }}</span>
+              <span style="flex: 1 1 auto;"></span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8d8d80;">npm run test:isolation</span>
+            </div>
+
+            <div style="background: #fff; border: 1px solid #e3e1d8; border-radius: 12px; overflow: hidden;">
+              <div style="display: flex; flex-direction: column;">
+                <sc-for list="{{ cases }}" as="c" hint-placeholder-count="8">
+                  <div style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 92px; gap: 14px; align-items: center; padding: 13px 18px; border-bottom: 1px solid #f3f1ea;">
+                    <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+                      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; overflow: hidden; text-overflow: ellipsis;">{{ c.query }}</span>
+                      <span style="font-size: 11px; color: #8d8d80;">{{ c.actor }}</span>
+                    </span>
+                    <span style="font-size: 12px; color: #55554a;">{{ c.outcome }}</span>
+                    <sc-if value="{{ c.done }}" hint-placeholder-val="{{ false }}">
+                      <span style="justify-self: end; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.06em; padding: 4px 9px; border-radius: 20px; background: #e7f2ea; color: oklch(0.45 0.11 150);">PASS</span>
+                    </sc-if>
+                    <sc-if value="{{ c.pending }}" hint-placeholder-val="{{ true }}">
+                      <span style="justify-self: end; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.06em; padding: 4px 9px; border-radius: 20px; background: #f1efe8; color: #8d8d80;">—</span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr); gap: 18px; align-items: start;">
+              <div style="background: #17170f; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 7px; min-height: 150px;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: #7f7f70;">console — tentativa manual</span>
+                <sc-for list="{{ consoleLines }}" as="line" hint-placeholder-count="2">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #d8d6c8; text-wrap: pretty;">{{ line }}</span>
+                </sc-for>
+              </div>
+              <div style="background: #fff; border: 1px solid #e3e1d8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+                <span style="font-size: 13px; font-weight: 600;">Tentar acesso cruzado</span>
+                <span style="font-size: 12px; color: #6f6f62; text-wrap: pretty;">Dispara as consultas contra a outra escola usando a sessão atual.</span>
+                <button onClick="{{ tryRead }}" style="height: 36px; border: 1px solid #dddbd1; border-radius: 8px; background: #fbfbf9; font-size: 13px; cursor: pointer; text-align: left; padding: 0 12px;" style-hover="border-color: oklch(0.52 0.13 258);">Ler turmas da outra escola</button>
+                <button onClick="{{ tryInsert }}" style="height: 36px; border: 1px solid #dddbd1; border-radius: 8px; background: #fbfbf9; font-size: 13px; cursor: pointer; text-align: left; padding: 0 12px;" style-hover="border-color: oklch(0.52 0.13 258);">Inserir turma na outra escola</button>
+                <button onClick="{{ tryEscalate }}" style="height: 36px; border: 1px solid #dddbd1; border-radius: 8px; background: #fbfbf9; font-size: 13px; cursor: pointer; text-align: left; padding: 0 12px;" style-hover="border-color: oklch(0.52 0.13 258);">Mudar meu papel para super_admin</button>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showSchools }}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 20px; align-items: start;">
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <sc-for list="{{ schoolCards }}" as="s" hint-placeholder-count="2">
+                <div style="background: #fff; border: 1px solid #e3e1d8; border-radius: 12px; padding: 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;">
+                  <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+                    <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.01em;">{{ s.name }}</span>
+                    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8d8d80;">{{ s.meta }}</span>
+                  </span>
+                  <span style="display: flex; gap: 22px;">
+                    <span style="display: flex; flex-direction: column; gap: 2px;">
+                      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #a2a294;">turmas</span>
+                      <span style="font-size: 17px; font-weight: 600;">{{ s.classes }}</span>
+                    </span>
+                    <span style="display: flex; flex-direction: column; gap: 2px;">
+                      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #a2a294;">alunos</span>
+                      <span style="font-size: 17px; font-weight: 600;">{{ s.students }}</span>
+                    </span>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+            <form onSubmit="{{ submitSchool }}" style="background: #fff; border: 1px solid #e3e1d8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; flex-direction: column; gap: 3px;">
+                <span style="font-size: 13px; font-weight: 600;">Nova escola</span>
+                <span style="font-size: 12px; color: #6f6f62;">Somente super_admin. Cria o tenant e o convite da direção.</span>
+              </div>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 12px; font-weight: 500; color: #55554a;">Nome</span>
+                <input value="{{ newSchoolName }}" onChange="{{ onNewSchoolName }}" placeholder="Colégio Novo Horizonte" style="height: 38px; padding: 0 10px; border: 1px solid #dddbd1; border-radius: 8px; background: #fbfbf9; font-size: 13px; outline: none;" />
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-size: 12px; font-weight: 500; color: #55554a;">Slug</span>
+                <input value="{{ newSchoolSlug }}" onChange="{{ onNewSchoolSlug }}" placeholder="novo-horizonte" style="height: 38px; padding: 0 10px; border: 1px solid #dddbd1; border-radius: 8px; background: #fbfbf9; font-size: 13px; outline: none;" />
+              </label>
+              <button type="submit" style="height: 38px; border: none; border-radius: 8px; background: oklch(0.52 0.13 258); color: #fff; font-size: 13px; font-weight: 500; cursor: pointer;" style-hover="background: oklch(0.44 0.13 258);">Criar escola</button>
+            </form>
+          </div>
+        </sc-if>
+
+      </div>
+    </main>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+/**
+ * Interactive prototype of the multi-tenant school SaaS.
+ *
+ * The data below is an in-memory stand-in for Postgres + RLS: every read
+ * is filtered by the signed-in user's school, and cross-tenant writes are
+ * refused with the same error code (42501) the real WITH CHECK clause
+ * raises. It exists so the flows can be reviewed before implementation —
+ * the enforcement itself belongs in supabase/migrations, not here.
+ */
+class Component extends DCLogic {
+  state = {
+    user: null,
+    email: '',
+    password: '',
+    loginError: '',
+    screen: 'dashboard',
+    sidebar: true,
+    form: {},
+    formError: '',
+    ran: false,
+    consoleLines: ['# entre com uma conta e dispare uma tentativa'],
+    newSchool: { name: '', slug: '' },
+    schools: [
+      { id: 'A', name: 'Colégio Aurora', slug: 'aurora' },
+      { id: 'B', name: 'Instituto Bandeirante', slug: 'bandeirante' },
+    ],
+    classes: [
+      { id: 'c1', school: 'A', name: '9º ano A', year: '2026' },
+      { id: 'c2', school: 'A', name: '1º ano EM', year: '2026' },
+      { id: 'c3', school: 'B', name: '9º ano A', year: '2026' },
+    ],
+    subjects: [
+      { id: 's1', school: 'A', name: 'Matemática', code: 'MAT' },
+      { id: 's2', school: 'A', name: 'História', code: 'HIS' },
+      { id: 's3', school: 'B', name: 'Matemática', code: 'MAT' },
+    ],
+    students: [
+      { id: 'a1', school: 'A', name: 'Ana Aluna Aurora', turma: '9º ano A', guardian: 'Cláudia Aurora', phone: '(11) 90000-0001' },
+      { id: 'a2', school: 'A', name: 'Pedro Souza', turma: '9º ano A', guardian: 'Rita Souza', phone: '(11) 90000-0002' },
+      { id: 'a3', school: 'B', name: 'Bruno Aluno Bandeirante', turma: '9º ano A', guardian: 'Jorge Bandeira', phone: '(21) 90000-0003' },
+    ],
+  };
+
+  accounts = [
+    { email: 'owner@plataforma.dev', role: 'super_admin', school: null, name: 'Dono da Plataforma' },
+    { email: 'admin@aurora.test', role: 'school_admin', school: 'A', name: 'Direção Aurora' },
+    { email: 'prof@aurora.test', role: 'teacher', school: 'A', name: 'Marina Prof. Aurora' },
+    { email: 'aluno@aurora.test', role: 'student', school: 'A', name: 'Ana Aluna Aurora' },
+    { email: 'admin@bandeirante.test', role: 'school_admin', school: 'B', name: 'Direção Bandeirante' },
+  ];
+
+  roleLabels = {
+    super_admin: 'Administrador da plataforma',
+    school_admin: 'Direção',
+    teacher: 'Professor',
+    student: 'Aluno',
+  };
+
+  // Which collection each screen edits, mirroring the tables 1:1.
+  collections = {
+    classes: {
+      table: 'classes',
+      title: 'Turmas',
+      subtitle: 'Turmas da sua escola. Criar e editar é atribuição da direção.',
+      formTitle: 'Nova turma',
+      columns: ['Turma', 'Ano', 'Alunos matriculados'],
+      fields: [
+        { key: 'name', label: 'Nome da turma', placeholder: '9º ano B' },
+        { key: 'year', label: 'Ano', placeholder: '2026' },
+      ],
+    },
+    subjects: {
+      table: 'subjects',
+      title: 'Disciplinas',
+      subtitle: 'Disciplinas da sua escola. O código é único por escola, não globalmente.',
+      formTitle: 'Nova disciplina',
+      columns: ['Disciplina', 'Código'],
+      fields: [
+        { key: 'name', label: 'Nome', placeholder: 'Geografia' },
+        { key: 'code', label: 'Código', placeholder: 'GEO' },
+      ],
+    },
+    students: {
+      table: 'students',
+      title: 'Alunos',
+      subtitle: 'Cadastro do aluno e matrícula em uma turma, em um único passo.',
+      formTitle: 'Cadastrar e matricular',
+      columns: ['Aluno', 'Turma', 'Responsável', 'Telefone'],
+      fields: [
+        { key: 'name', label: 'Nome completo', placeholder: 'Nome do aluno' },
+        { key: 'turma', label: 'Matricular em', select: true },
+        { key: 'guardian', label: 'Responsável', placeholder: 'Nome do responsável' },
+        { key: 'phone', label: 'Telefone', placeholder: '(11) 90000-0000' },
+      ],
+    },
+  };
+
+  navFor(role) {
+    if (role === 'super_admin') {
+      return [
+        { key: 'schools', label: 'Escolas', tag: 'ESC' },
+        { key: 'isolation', label: 'Isolamento', tag: 'ISO' },
+      ];
+    }
+    if (role === 'school_admin') {
+      return [
+        { key: 'dashboard', label: 'Visão geral', tag: 'GER' },
+        { key: 'classes', label: 'Turmas', tag: 'TUR' },
+        { key: 'subjects', label: 'Disciplinas', tag: 'DIS' },
+        { key: 'students', label: 'Alunos', tag: 'ALU' },
+        { key: 'isolation', label: 'Isolamento', tag: 'ISO' },
+      ];
+    }
+    return [{ key: 'dashboard', label: 'Visão geral', tag: 'GER' }];
+  }
+
+  login = (account) => {
+    this.setState({
+      user: account,
+      email: '',
+      password: '',
+      loginError: '',
+      screen: this.navFor(account.role)[0].key,
+      form: {},
+      formError: '',
+      ran: false,
+      consoleLines: ['# sessão: ' + account.email],
+    });
+  };
+
+  submitLogin = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const match = this.accounts.find((a) => a.email === this.state.email.trim());
+    if (!match) {
+      this.setState({ loginError: 'AuthApiError: Invalid login credentials' });
+      return;
+    }
+    this.login(match);
+  };
+
+  // Rows a given user can see — the prototype's stand-in for RLS.
+  visible(list) {
+    const user = this.state.user;
+    if (!user) return [];
+    if (user.role === 'super_admin') return list;
+    return list.filter((r) => r.school === user.school);
+  }
+
+  push(line) {
+    this.setState((s) => ({ consoleLines: [...s.consoleLines.slice(-5), line] }));
+  }
+
+  renderVals() {
+    const s = this.state;
+    const user = s.user;
+
+    const accounts = this.accounts.map((a) => ({
+      email: a.email,
+      role: a.role,
+      context: a.school ? this.schoolName(a.school) : 'plataforma · todas as escolas',
+      login: () => this.login(a),
+    }));
+
+    const base = {
+      isLoggedOut: !user,
+      isLoggedIn: !!user,
+      email: s.email,
+      password: s.password,
+      loginError: s.loginError,
+      accounts,
+      onEmail: (e) => this.setState({ email: e.target.value }),
+      onPassword: (e) => this.setState({ password: e.target.value }),
+      submitLogin: this.submitLogin,
+    };
+
+    if (!user) return base;
+
+    const nav = this.navFor(user.role).map((item) => ({
+      ...item,
+      isActive: item.key === s.screen,
+      isInactive: item.key !== s.screen,
+      go: () => this.setState({ screen: item.key, form: {}, formError: '' }),
+    }));
+
+    const collection = this.collections[s.screen];
+    const isCollection = !!collection;
+
+    const shell = {
+      ...base,
+      sidebarOpen: s.sidebar,
+      sidebarClosed: !s.sidebar,
+      toggleSidebar: () => this.setState({ sidebar: !s.sidebar }),
+      navItems: nav,
+      tenantName: user.school ? this.schoolName(user.school) : 'Plataforma',
+      userName: user.name,
+      roleLabel: this.roleLabels[user.role],
+      scopeLine: user.school
+        ? 'school_id = ' + user.school + ' · role = ' + user.role
+        : 'role = super_admin · sem tenant',
+      logout: () => this.setState({ user: null, screen: 'dashboard' }),
+      showDashboard: s.screen === 'dashboard',
+      showCollection: isCollection,
+      showIsolation: s.screen === 'isolation',
+      showSchools: s.screen === 'schools',
+      screenTitle: this.titleFor(s.screen),
+      screenSubtitle: this.subtitleFor(s.screen),
+      stats: this.statsFor(user),
+      cases: this.casesFor(),
+      suiteStatus: s.ran ? '8/8 casos passaram · nenhum vazamento entre tenants' : 'aguardando execução',
+      runSuite: () => this.setState({ ran: true }),
+      consoleLines: s.consoleLines,
+      tryRead: () => this.push('select * from classes where school_id = ' + this.otherSchool() + '  ->  0 rows'),
+      tryInsert: () => this.push('insert into classes (school_id = ' + this.otherSchool() + ')  ->  42501 new row violates row-level security policy'),
+      tryEscalate: () => this.push("update profiles set role = 'super_admin' where id = auth.uid()  ->  42501 blocked by WITH CHECK"),
+      schoolCards: s.schools.map((sc) => ({
+        name: sc.name,
+        meta: 'slug: ' + sc.slug + ' · id: ' + sc.id,
+        classes: s.classes.filter((c) => c.school === sc.id).length,
+        students: s.students.filter((st) => st.school === sc.id).length,
+      })),
+      newSchoolName: s.newSchool.name,
+      newSchoolSlug: s.newSchool.slug,
+      onNewSchoolName: (e) => this.setState({ newSchool: { ...s.newSchool, name: e.target.value } }),
+      onNewSchoolSlug: (e) => this.setState({ newSchool: { ...s.newSchool, slug: e.target.value } }),
+      submitSchool: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const { name, slug } = s.newSchool;
+        if (!name.trim()) return;
+        this.setState({
+          schools: [...s.schools, { id: 'T' + (s.schools.length + 1), name: name.trim(), slug: slug.trim() || name.trim().toLowerCase().replace(/\s+/g, '-') }],
+          newSchool: { name: '', slug: '' },
+        });
+      },
+    };
+
+    if (!isCollection) return shell;
+
+    const list = this.visible(s[s.screen]);
+    const classOptions = this.visible(s.classes).map((c) => c.name);
+
+    return {
+      ...shell,
+      collectionTitle: collection.title,
+      collectionTable: collection.table,
+      columns: collection.columns,
+      formTitle: collection.formTitle,
+      rowCountLabel: list.length + (list.length === 1 ? ' registro' : ' registros'),
+      isEmpty: list.length === 0,
+      insertHint: 'insert into ' + collection.table + " (school_id = '" + user.school + "', ...)",
+      rows: list.map((row) => ({
+        cells: this.cellsFor(s.screen, row),
+        remove: () => this.setState((prev) => ({ [s.screen]: prev[s.screen].filter((r) => r.id !== row.id) })),
+      })),
+      fields: collection.fields.map((f) => ({
+        label: f.label,
+        placeholder: f.placeholder || '',
+        value: s.form[f.key] || (f.select ? classOptions[0] || '' : ''),
+        isSelect: !!f.select,
+        isText: !f.select,
+        options: f.select ? classOptions : [],
+        onChange: (e) => this.setState({ form: { ...this.state.form, [f.key]: e.target.value }, formError: '' }),
+      })),
+      formError: s.formError,
+      submitForm: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        if (user.role !== 'school_admin') {
+          this.setState({ formError: '42501: apenas school_admin escreve nesta tabela' });
+          return;
+        }
+        const values = { ...s.form };
+        const required = collection.fields[0].key;
+        if (!values[required] || !String(values[required]).trim()) {
+          this.setState({ formError: 'preencha ' + collection.fields[0].label.toLowerCase() });
+          return;
+        }
+        if (s.screen === 'students' && !values.turma) values.turma = classOptions[0] || '';
+        const row = { id: Math.random().toString(36).slice(2, 8), school: user.school, ...values };
+        this.setState((prev) => ({ [s.screen]: [...prev[s.screen], row], form: {}, formError: '' }));
+      },
+    };
+  }
+
+  cellsFor(screen, row) {
+    if (screen === 'classes') {
+      const count = this.state.students.filter((st) => st.school === row.school && st.turma === row.name).length;
+      return [{ text: row.name }, { text: row.year }, { text: String(count) }];
+    }
+    if (screen === 'subjects') return [{ text: row.name }, { text: row.code }];
+    return [{ text: row.name }, { text: row.turma || '—' }, { text: row.guardian || '—' }, { text: row.phone || '—' }];
+  }
+
+  schoolName(id) {
+    const found = this.state.schools.find((s) => s.id === id);
+    return found ? found.name : '—';
+  }
+
+  otherSchool() {
+    return this.state.user && this.state.user.school === 'A' ? 'B' : 'A';
+  }
+
+  titleFor(screen) {
+    if (screen === 'schools') return 'Escolas na plataforma';
+    if (screen === 'isolation') return 'Isolamento entre tenants';
+    if (this.collections[screen]) return this.collections[screen].title;
+    return 'Visão geral';
+  }
+
+  subtitleFor(screen) {
+    if (screen === 'schools') return 'Cada escola é um tenant. Só o super_admin cria, renomeia ou desativa.';
+    if (screen === 'isolation') return 'Os mesmos casos rodados por npm run test:isolation e pelo script SQL, com o resultado desta sessão.';
+    if (this.collections[screen]) return this.collections[screen].subtitle;
+    return 'Placeholder por papel: prova que a rota certa carrega para o papel certo.';
+  }
+
+  statsFor(user) {
+    const classes = this.visible(this.state.classes).length;
+    const students = this.visible(this.state.students).length;
+    const subjects = this.visible(this.state.subjects).length;
+    if (user.role === 'student') {
+      return [
+        { label: 'minhas turmas', value: '1' },
+        { label: 'disciplinas', value: String(subjects) },
+        { label: 'notas lançadas', value: '1' },
+      ];
+    }
+    if (user.role === 'teacher') {
+      return [
+        { label: 'turmas atribuídas', value: '1' },
+        { label: 'disciplinas', value: String(subjects) },
+        { label: 'alunos', value: String(students) },
+      ];
+    }
+    return [
+      { label: 'turmas', value: String(classes) },
+      { label: 'disciplinas', value: String(subjects) },
+      { label: 'alunos', value: String(students) },
+    ];
+  }
+
+  casesFor() {
+    const done = this.state.ran;
+    const rows = [
+      ['select classes where school_id = B', 'admin@aurora.test', '0 linhas'],
+      ['insert classes (school_id = B)', 'admin@aurora.test', 'erro 42501'],
+      ['update classes set school_id = B', 'admin@aurora.test', 'erro 42501'],
+      ['delete classes where school_id = B', 'admin@aurora.test', '0 linhas afetadas'],
+      ['select students / grades (escola B)', 'admin@aurora.test', '0 linhas'],
+      ['insert classes (school_id = A)', 'prof@aurora.test', 'erro 42501 · papel'],
+      ["update profiles set role = 'super_admin'", 'aluno@aurora.test', 'erro 42501 · escalada'],
+      ['select schools', 'owner@plataforma.dev', '2 linhas · por desenho'],
+    ];
+    return rows.map((r) => ({ query: r[0], actor: r[1], outcome: done ? r[2] : 'não executado', done, pending: !done }));
+  }
+}
+
+</script>
+</body>
+</html>
